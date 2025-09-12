@@ -29,53 +29,26 @@ def read_file_content(filename: str):
 @app.post("/api/ask")
 async def ask_question(request: QuestionRequest):
     try:
-        # Получаем список файлов
         files = os.listdir("/shared-data")
         if not files:
             return {"answer": "В папке shared-data нет файлов для анализа"}
         
-        # Читаем все файлы
-        files_content = []
-        for filename in files:
-            content = read_file_content(filename)
-            if content:
-                files_content.append(f"ФАЙЛ: {filename}\nСОДЕРЖИМОЕ:\n{content}\n")
+        content = read_file_content(files[0])
+        if not content:
+            return {"answer": "Не удалось прочитать файл"}
         
-        if not files_content:
-            return {"answer": "Не удалось прочитать файлы"}
-        
-        # Формируем контекст для модели
-        context = "\n".join(files_content)
-        
-        # Улучшенный промпт с четким разделением ролей
+        # Очень простой и прямой промпт
         prompt = f"""
-        РОЛЬ: Ты - ассистент, который анализирует содержимое файлов и отвечает на вопросы пользователя.
+        Содержимое файла:
+        {content}
 
-        КОНТЕКСТ:
-        Пользователь задал вопрос о файлах в папке shared-data.
+        Вопрос: {request.question}
 
-        ВОПРОС ПОЛЬЗОВАТЕЛЯ: "{request.question}"
-
-        СОДЕРЖИМОЕ ФАЙЛОВ:
-        {context}
-
-        ИНСТРУКЦИЯ:
-        1. Анализируй ВОПРОС пользователя и отвечай на него на основе СОДЕРЖИМОГО ФАЙЛОВ
-        2. Не проси пользователя предоставить текст - весь необходимый текст уже в файлах
-        3. Отвечай конкретно на вопрос пользователя
-        4. Используй только информацию из предоставленных файлов
-        5. Если информации недостаточно - скажи об этом честно
-        6. Ответ дай на русском языке
-
-        ПРИМЕР:
-        Вопрос: "Что содержится в файле test.md?"
-        Ответ: "Файл test.md содержит: 1. Заголовок 'Анализ текста', 2. Пример текста 'Привет, мир!...', 3. Инструкцию для анализа тональности"
-
-        ТВОЙ ОТВЕТ на вопрос "{request.question}":
+        Ответь на вопрос используя только информацию из файла.
         """
         
         payload = {
-            "model": "qwen2:0.5b",
+            "model": "llama2:7b",  # Используем более мощную модель
             "prompt": prompt,
             "stream": False,
             "options": {
@@ -84,7 +57,7 @@ async def ask_question(request: QuestionRequest):
             }
         }
         
-        response = requests.post("http://ollama:11434/api/generate", json=payload, timeout=60)
+        response = requests.post("http://ollama:11434/api/generate", json=payload, timeout=120)
         response.raise_for_status()
         
         result = response.json()
@@ -98,7 +71,7 @@ async def ask_question(request: QuestionRequest):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка обработки вопроса: {str(e)}")
-    
+     
 @app.get("/api/files")
 async def list_files():
     try:

@@ -63,3 +63,5 @@ ipython_config_dir/
 
 # PEP 582
 __portal__/
+
+.venv

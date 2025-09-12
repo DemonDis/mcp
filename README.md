@@ -29,9 +29,9 @@ docker run -d \
 ```
 
 ### Запуск языковой модели через Ollama
-Загружает и запускает модель **qwen2:0.5b** (или codeqwen:1.5b)
+Загружает и запускает модель **qwen2:0.5b** (или codeqwen:1.5b или Qwen2-0.5B-Instruct или llama2:7b)
 ```bash
-docker exec ollama ollama pull qwen2:0.5b
+docker exec ollama ollama pull qwen2:0.5b-instruct
 ```
 
 ## Запуск MCP-сервера (Filesystem)
