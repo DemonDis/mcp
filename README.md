@@ -17,7 +17,7 @@
 ```bash
 docker pull ollama/ollama
 ```
-codeqwen:1.5b
+
 
 ### Запуск Ollama в Docker
 ```bash
@@ -29,7 +29,7 @@ docker run -d \
 ```
 
 ### Запуск языковой модели через Ollama
-Загружает и запускает модель **qwen2:0.5b**
+Загружает и запускает модель **qwen2:0.5b** (или codeqwen:1.5b)
 ```bash
 docker exec ollama ollama pull qwen2:0.5b
 ```
@@ -66,6 +66,31 @@ docker run -it --rm \
   node:20-bookworm-slim \
   npx -y @modelcontextprotocol/cli@latest --config /root/mcp-config.json
 ```
+
+docker run -d \
+  --name mcp-fileserver \
+  -p 28000:28000 \
+  -v /home/sdd/mcp-test-dir:/root/mcp-test-dir \
+  -e MCP_FILESYSTEM_DIRS='["/root/mcp-test-dir"]' \
+  mcp-fileserver-local \
+  bash -c "npx -y @modelcontextprotocol/server-filesystem /root/mcp-test-dir sse --port 28000"
+
+[Ваша хост-машина (Linux)]
+       |
+       | (HTTP/SSE)
+       |
++---------------+
+| Контейнер 1:  |   [MCP-сервер]  (например, filesystem или simple)
+| - MCP Server  |   предоставляет инструменты для работы с файлами
++---------------+
+       |
+       | (HTTP/SSE)
+       |
++---------------+
+| Контейнер 2:  |   [MCP-клиент]  (Ollama + модель + клиентское приложение)
+| - Ollama      |   запрашивает инструменты у MCP-сервера
+| - Модель      |
++---------------+
 
 
 
