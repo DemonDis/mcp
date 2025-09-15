@@ -2,43 +2,39 @@
 
 ## Структура backend
 ```
-📁 mcp-file-server/
-├── 📁 backend/
-│   ├── 📁 mcp_server/
-│   │   ├── 📝 __init__.py
-│   │   ├── 📝 server.py
-│   │   └── 📝 file_tools.py
-│   ├── 📝 Dockerfile
-│   ├── 📝 requirements.txt
-│   └── main.py
-├── 📁 frontend/
-│   ├── 📁 public/
-│   ├── 📁 src/
-│   │   ├── 📝 App.jsx
-│   │   ├── 📝 App.css
-│   │   └── 📝 index.jsx
-│   ├── 📝 package.json
-│   └── 📝 Dockerfile.react
-├── 📁 shared-data/
-│   └── 📝 test.md
-├── 📝 docker-compose.yml
+📁 backend/
+│   ├── 📁 mcp_server/              # Модули сервера MCP, отвечающие за обработку файлов и взаимодействие с MCP.
+│   │   ├── 📝 __init__.py          # Инициализация пакета mcp_server.
+│   │   ├── 📝 server.py            # Основной файл сервера, обрабатывает запросы.
+│   │   └── 📝 file_tools.py        # Утилиты для работы с файлами.
+│   ├── 📝 Dockerfile              # Конфигурация для сборки Docker-образа бэкенда.
+│   ├── 📝 requirements.txt        # Список Python-зависимостей.
+│   └── 📝 main.py                 # Точка входа в приложение бэкенда.
 └── ...
 ```
 
 ## Настройка окружения и запуск
-Создание виртуального окружения Python
+
+### Создание виртуального окружения Python
 ```bash
 python3 -m venv .venv
 ```
 
-## Активация виртуального окружения
+### Активация виртуального окружения
 ```bash
 . .venv/bin/activate
 # Команда для выхода из окружения
 deactivate
 ```
 
-## Установка зависимостей проекта
+### Установка зависимостей проекта
 ```bash
 pip3 install -r requirements.txt
 ```
+
+### Запуск приложения
+Для запуска бэкенда напрямую (например, для разработки):
+```bash
+python main.py
+```
+*Примечание: Если `main.py` использует веб-фреймворк (например, FastAPI/Flask), команда может быть другой, например: `uvicorn main:app --reload`.*
