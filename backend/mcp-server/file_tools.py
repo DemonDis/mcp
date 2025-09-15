@@ -107,7 +107,7 @@ class FileTools:
             """
             
             payload = {
-                "model": "llama2:7b",
+                "model": "qwen2:0.5b-instruct",
                 "prompt": prompt,
                 "stream": False,
                 "options": {

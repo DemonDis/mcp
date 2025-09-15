@@ -48,7 +48,7 @@ async def ask_question(request: QuestionRequest):
         """
         
         payload = {
-            "model": "llama2:7b",  # Используем более мощную модель
+            "model": "qwen2:0.5b-instruct",  # Используем более мощную модель
             "prompt": prompt,
             "stream": False,
             "options": {
